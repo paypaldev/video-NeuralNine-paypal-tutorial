@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>My Orders</h1>
+<table>
+  <tr><th>PayPal Order ID</th><th>Items</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+  {% for o in orders %}
+    <tr>
+      <td>{{ o['paypal_order_id'] }}</td>
+      <td>{{ o['items'] }}</td>
+      <td>${{ o['amount'] }}</td>
+      <td>{{ o['status'] }}</td>
+      <td>{{ o['created_at'] }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5">No orders yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

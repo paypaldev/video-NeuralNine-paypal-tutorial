@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Received Webhook Events</h1>
+<table>
+  <tr><th>Event Type</th><th>Resource ID</th><th>Received</th></tr>
+  {% for e in events %}
+    <tr>
+      <td>{{ e['event_type'] }}</td>
+      <td>{{ e['resource_id'] }}</td>
+      <td>{{ e['received_at'] }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="3">No events yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

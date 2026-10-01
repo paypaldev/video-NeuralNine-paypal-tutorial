@@ -1,0 +1,11 @@
+[project]
+name = "paypal-saas"
+version = "0.1.0"
+description = "Demo SaaS app with PayPal Subscriptions and webhooks"
+requires-python = ">=3.12"
+dependencies = [
+    "flask>=3.0",
+    "paypal-server-sdk>=2.3.0",
+    "python-dotenv>=1.0",
+    "requests>=2.31",
+]

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Demo SaaS</h1>
+<p>Pick a plan:</p>
+
+{% for key, plan in plans.items() %}
+  <div class="tier">
+    <h3>{{ plan['name'] }} - ${{ plan['price'] }}/month</h3>
+    {% if user %}
+      <a href="{{ url_for('subscribe', tier=key) }}">Subscribe</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Log in to subscribe</a>
+    {% endif %}
+  </div>
+  <br>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Demo Shop</h1>
+
+<ul>
+  {% for id, p in products.items() %}
+    <li>{{ p['name'] }} - ${{ p['price'] }}
+      <a href="{{ url_for('add_to_cart', product_id=id) }}">Add to cart</a>
+    </li>
+  {% endfor %}
+</ul>
+
+<h2>Cart</h2>
+{% if cart %}
+  <ul>
+    {% for pid, qty in cart.items() %}
+      <li>{{ products[pid|int]['name'] }} x {{ qty }}</li>
+    {% endfor %}
+  </ul>
+  <a href="{{ url_for('clear_cart') }}">Clear cart</a>
+
+  {% if user %}
+    <paypal-button id="paypal-button" style="margin-top:20px;" hidden></paypal-button>
+    <p id="result"></p>
+
+    <script async src="https://www.sandbox.paypal.com/web-sdk/v6/core" onload="initPayPal()"></script>
+    <script>
+      async function initPayPal() {
+        const sdk = await window.paypal.createInstance({
+          clientId: "{{ config['PAYPAL_CLIENT_ID'] }}",
+          components: ["paypal-payments"],
+          pageType: "checkout",
+        });
+
+        const methods = await sdk.findEligibleMethods({ currencyCode: "USD" });
+        if (!methods.isEligible("paypal")) return;
+        const button = document.getElementById("paypal-button");
+        button.hidden = false;
+
+        const paypalSession = sdk.createPayPalOneTimePaymentSession({
+          onApprove: async ({ orderId }) => {
+            const res = await fetch(`/api/orders/${orderId}/capture`, { method: "POST" });
+            const details = await res.json();
+            document.getElementById("result").textContent = "Payment " + details.status;
+            if (details.status === "COMPLETED") {
+              window.location.href = "/orders";
+            }
+          },
+          onCancel: () => {
+            document.getElementById("result").textContent = "Payment cancelled.";
+          },
+          onError: (err) => {
+            document.getElementById("result").textContent = "Payment failed.";
+            console.error(err);
+          },
+        });
+
+        button.addEventListener("click", async () => {
+          const createOrder = fetch("/api/orders", { method: "POST" })
+            .then((res) => res.json())
+            .then((data) => ({ orderId: data.id }));
+          await paypalSession.start({ presentationMode: "auto" }, createOrder);
+        });
+      }
+    </script>
+  {% else %}
+    <p><a href="{{ url_for('login') }}">Log in</a> to check out.</p>
+  {% endif %}
+{% else %}
+  <p>Your cart is empty.</p>
+{% endif %}
+{% endblock %}

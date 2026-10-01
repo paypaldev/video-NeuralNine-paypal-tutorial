@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Dashboard</h1>
+<p>Current tier: <strong>{{ user['tier'] }}</strong></p>
+<p>Subscription status: {{ user['sub_status'] or 'none' }}</p>
+{% if user['subscription_id'] %}
+  <p>Subscription ID: {{ user['subscription_id'] }}</p>
+  <p><a href="{{ url_for('cancel') }}">Cancel subscription</a></p>
+{% else %}
+  <p><a href="{{ url_for('index') }}">Choose a plan</a></p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Premium Feature</h1>
+<p>This content is only visible to paying subscribers.</p>
+<p>You are on the <strong>{{ user['tier'] }}</strong> tier.</p>
+{% endblock %}

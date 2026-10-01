@@ -1,0 +1,10 @@
+[project]
+name = "paypal-shop"
+version = "0.1.0"
+description = "Demo web shop with PayPal Checkout"
+requires-python = ">=3.12"
+dependencies = [
+    "flask>=3.0",
+    "paypal-server-sdk>=2.3.0",
+    "python-dotenv>=1.0",
+]
